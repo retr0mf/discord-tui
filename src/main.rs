@@ -1,3 +1,8 @@
+mod app;
+
+use app::app::App;
+
 fn main() {
-    println!("meow");
+    App::default().run(ratatui::init());
+    ratatui::restore();
 }
