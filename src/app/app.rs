@@ -1,34 +1,61 @@
+use color_eyre::owo_colors::OwoColorize;
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::{
     DefaultTerminal, Frame,
-    layout::{Alignment, Constraint, Direction, Layout},
+    layout::{Alignment, Constraint, Direction, Layout, Size},
     style::{Color, Modifier, Style, Styled, Stylize},
     text::Line,
-    widgets::{Block, BorderType, Padding, Paragraph},
+    widgets::{Block, BorderType, Padding, Paragraph, RatatuiLogo, RatatuiLogoSize},
 };
-use std::collections::HashMap;
+use std::{collections::HashMap, vec};
 
 // └
 
 const VERSION: &str = "0.01a";
 
+#[derive(Default, Clone)]
 struct User {
     name: String,
     username: String,
     is_friend: bool,
-    account_creation_time: ()
+    account_creation_time: (),
 }
 
+impl User {
+    fn new(name: String, username: String, is_friend: bool, account_creation_time: ()) -> User {
+        User {
+            name,
+            username,
+            is_friend,
+            account_creation_time,
+        }
+    }
+}
 
+#[derive(Default, Clone)]
+struct Message {
+    sender: User,
+    contents: String,
+    sent_at: (), // Timestamp planned
+}
 
-#[derive(Default)]
+#[derive(Default, Clone)]
+struct Chat {
+    user: User,
+    messages: Vec<Message>,
+}
+
+#[derive(Default, Clone)]
 struct Status {
     description: String,
     is_good: bool,
 }
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct App {
+    logged_user: User,
+    chats: Vec<Chat>,
+    friends: Vec<User>,
     is_running: bool,
     status: Status,
 }
@@ -47,7 +74,7 @@ impl App {
             self.handle_kbd_events();
         }
     }
-    
+
     pub fn render(&mut self, frame: &mut Frame) -> () {
         let title_st = Style::new().bold().italic();
         let border_type = BorderType::Rounded;
@@ -75,7 +102,48 @@ impl App {
 
         frame.render_widget(outer, frame.area());
         frame.render_widget(users_block, app_layout[0]);
+        // frame.render_widget(active_chat_block, app_layout[1]);
         frame.render_widget(active_chat_block, app_layout[1]);
+    }
+
+    // fn compose_user_block(&mut self, ) -> Block {
+    // }
+
+    fn fetch_server_info(&mut self) -> Result<(), String> {
+        self.logged_user = User::new("retr00".to_string(), "retr0912".to_string(), false, ());
+        self.chats = vec![Chat {
+            user: User {
+                name: "Test Test".to_string(),
+                username: "testacc".to_string(),
+                is_friend: true,
+                account_creation_time: (),
+            },
+            messages: vec![
+                Message {
+                    sender: self.logged_user.clone(),
+                    contents: "Hello, Test!".to_string(),
+                    sent_at: (),
+                },
+                Message {
+                    sender: User {
+                        name: "Test Test".to_string(),
+                        username: "testacc".to_string(),
+                        is_friend: true,
+                        account_creation_time: (),
+                    },
+                    contents: "Hello, Test!".to_string(),
+                    sent_at: (),
+                },
+            ],
+        }];
+
+        self.friends = vec![User {
+            name: "Test Test".to_string(),
+            username: "testacc".to_string(),
+            is_friend: true,
+            account_creation_time: (),
+        }];
+        Ok(())
     }
 
     fn handle_kbd_events(&mut self) -> () {
