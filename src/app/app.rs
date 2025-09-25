@@ -1,8 +1,9 @@
 use color_eyre::owo_colors::OwoColorize;
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
+use ratatui::widgets::Borders;
 use ratatui::{
     DefaultTerminal, Frame,
-    layout::{Alignment, Constraint, Direction, Layout, Size},
+    layout::{Alignment, Constraint, Direction, Layout, Rect, Size},
     style::{Color, Modifier, Style, Styled, Stylize},
     text::Line,
     widgets::{Block, BorderType, Padding, Paragraph, RatatuiLogo, RatatuiLogoSize},
@@ -101,13 +102,31 @@ impl App {
             .border_type(border_type);
 
         frame.render_widget(outer, frame.area());
-        frame.render_widget(users_block, app_layout[0]);
-        // frame.render_widget(active_chat_block, app_layout[1]);
+        frame.render_widget(&users_block, app_layout[0]);
         frame.render_widget(active_chat_block, app_layout[1]);
+        self.compose_user_block(frame, users_block.inner(frame.area()))
+            .unwrap();
     }
 
-    // fn compose_user_block(&mut self, ) -> Block {
-    // }
+    fn compose_user_block(&mut self, frame: &mut Frame, area: Rect) -> Result<(), String> {
+        let constraints: Vec<Constraint> = vec![Constraint::Length(5); self.chats.len()];
+
+        let user_block_layout = Layout::default()
+            .direction(Direction::Vertical)
+            .margin(1)
+            .constraints(constraints)
+            .split(area);
+
+        for (ind, chat) in self.chats.iter().enumerate() {
+            let chat_block: Block = Block::default()
+                .title(chat.user.name.clone())
+                .borders(Borders::ALL);
+
+            frame.render_widget(chat_block, user_block_layout[ind]);
+        }
+
+        Ok(())
+    }
 
     fn fetch_server_info(&mut self) -> Result<(), String> {
         self.logged_user = User::new("retr00".to_string(), "retr0912".to_string(), false, ());
