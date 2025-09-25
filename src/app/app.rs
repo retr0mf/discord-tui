@@ -1,17 +1,18 @@
 use color_eyre::owo_colors::OwoColorize;
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::{
-    DefaultTerminal, Frame,
-    layout::{Alignment, Constraint, Direction, Layout, Size},
-    style::{Color, Modifier, Style, Styled, Stylize},
-    text::Line,
-    widgets::{Block, BorderType, Padding, Paragraph, RatatuiLogo, RatatuiLogoSize},
+    layout::{Alignment, Constraint, Direction, Layout, Rect, Size}, style::{Color, Modifier, Style, Styled, Stylize}, text::Line, widgets::{Block, BorderType, Padding, Paragraph, RatatuiLogo, RatatuiLogoSize}, DefaultTerminal, Frame
 };
 use std::{collections::HashMap, vec};
 
 // └
 
 const VERSION: &str = "0.01a";
+
+enum Err {
+    CompositionError,
+    AuthError
+}
 
 #[derive(Default, Clone)]
 struct User {
@@ -106,7 +107,13 @@ impl App {
         frame.render_widget(active_chat_block, app_layout[1]);
     }
 
-    // fn compose_user_block(&mut self, ) -> Block {
+    // fn compose_user_block(&mut self, frame: Frame, area: Rect) -> Result<(), Err> {
+
+    //     for chat in &self.chats {
+    //         let chat_block = Block::bordered()
+    //     }
+
+    //     Ok(())
     // }
 
     fn fetch_server_info(&mut self) -> Result<(), String> {

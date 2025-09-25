@@ -2,6 +2,8 @@
 name = "discord-tui"
 version = "0.1.0"
 edition = "2024"
+authors = ["retr0", "kowkodivka"]
+license = "MIT"
 
 [dependencies]
 crossterm = "0.28.1"
