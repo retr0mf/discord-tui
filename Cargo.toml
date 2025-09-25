@@ -7,3 +7,8 @@ edition = "2024"
 crossterm = "0.28.1"
 ratatui = "0.29.0"
 color-eyre = "0.6.3"
+tokio = { version = "*", features = ["full"] }
+reqwest = "*"
+serde = { version = "*", features = ["derive"] }
+serde_json = "*"
+secrecy = "0.10.3"
