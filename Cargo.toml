@@ -9,3 +9,11 @@ license = "MIT"
 crossterm = "0.28.1"
 ratatui = "0.29.0"
 color-eyre = "0.6.3"
+<<<<<<< HEAD
+=======
+tokio = { version = "*", features = ["full"] }
+reqwest = "*"
+serde = { version = "*", features = ["derive"] }
+serde_json = "*"
+secrecy = "0.10.3"
+>>>>>>> refs/remotes/origin/master
